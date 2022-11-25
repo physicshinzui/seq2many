@@ -24,7 +24,7 @@ GSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPYRVVVLSFELL
 
 
 ### multiple mutation 
-`python seq2many.py -i ref.seq -m double -ml mutlist.inp`
+`python seq2many.py -i ref.seq -m multi -ml mutlist.inp`
 
 where
 ```mutlist.inp
