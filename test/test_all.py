@@ -1,5 +1,5 @@
 import unittest 
-from mutantsGenetator import *
+from seq2many import *
 
 class TestAll(unittest.TestCase):
 
