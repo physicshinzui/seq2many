@@ -35,6 +35,7 @@ def ref2mut(ref_seq, position, aa):
     Return: 
         seq: a mutated sequence (str)
     """
+    # NOTE: the reference sequence is duplicated if the specified amino acid is the one in the reference.
     seq = ref_seq[:position] + aa.upper() + ref_seq[position+1:]
     return seq
 
@@ -52,13 +53,15 @@ def write_seq(seqs):
     # Single sequence is outputed.
     if isinstance(seqs, str):
         with open("out.seq", "w") as fout:
+            fout.write(f"> mutant \n")
             fout.write(seqs)
 
     # Many mutant sequences are outputed.
     elif isinstance(seqs, list): 
         for i, seq in enumerate(seqs):
             with open(f"mut_{i}.seq", "w") as fout:
-                fout.write(seq)
+                fout.write(f"> mutant {i}\n")
+                fout.write(seq+"\n")
 
 def output_position_index(seq, prefix):
     with open(f"index_{prefix}.out", "w") as fout:
@@ -154,7 +157,7 @@ def main():
         output_position_index(seq, mode)
 
     elif mode == "deep":
-        seq = deep_mutational_scanning(ref_seq, 0, 1)
+        seq = deep_mutational_scanning(ref_seq, 0, 100)
         write_seq(seq)
 
     else:
