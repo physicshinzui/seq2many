@@ -1,0 +1,141 @@
+import argparse
+import sys
+
+def ref2mut(ref_seq, position, aa):
+    """
+    Args: 
+        ref_seq: a reference sequence (str)
+        position: position (0-index) in the reference sequence that mutate (int)
+        aa: one-letter amino acid into which the position mutates (str)
+
+    Return: 
+        seq: a mutated sequence (str)
+    """
+    seq = ref_seq[:position] + aa.upper() + ref_seq[position+1:]
+    return seq
+
+def read_seq(input_seq):
+    ref_seq = ""
+    with open(input_seq, "r") as fin:
+        for line in fin:
+            if line.lstrip().startswith(">"):
+                continue
+            ref_seq = ref_seq + line.strip()
+    return ref_seq 
+
+def write_seq(seqs):
+
+    # Single sequence is outputed.
+    if isinstance(seqs, str):
+        with open("out.seq", "w") as fout:
+            fout.write(seqs)
+
+    # Many mutant sequences are outputed.
+    elif isinstance(seqs, list): 
+        for i, seq in enumerate(seqs):
+            with open(f"mut_{i}.seq", "w") as fout:
+                fout.write(seq)
+
+def output_position_index(seq, prefix):
+    with open(f"index_{prefix}.out", "w") as fout:
+        fout.write("#index, aa\n")
+        for i, seq in enumerate(seq):
+            fout.write(f"{i} {seq}\n")
+
+def multiple_mutation(seq, aa_position):
+    """
+    Args:
+        seq (str): a sequence to mutate
+        aa_position (dict): pairs between a one-letter amino acid and a 0-indexed position,
+            e.g. {'A':2, 'L':10} 
+            In this case, the amino acids in seq[2] and seq[10] mutate into A and L.
+
+    Return:
+        multseq (str): the mutated sequence 
+    """
+    if not aa_position: 
+        sys.exit(f"ERROR: No items in the dictionary")
+
+    multseq = seq
+    for aa, position in aa_position.items():
+        multseq = ref2mut(multseq, position, aa)
+    return multseq
+
+def deep_mutational_scanning(seq, begin_position, end_position):
+    AAs = list("G P A V L I M C F Y W H K R Q N E D S T".split())
+    dms_seq = []
+    for i in range(begin_position, end_position):
+        for aa in AAs:
+            dms_seq.append(ref2mut(seq, i, aa))
+    return dms_seq
+
+def hamming_distance(seq1, seq2):
+    assert len(seq1) == len(seq2), f"The length of each sequqnce is different: {len(seq1)} and {len(seq2)}"
+    hdist = 0
+    for a1, a2 in zip(seq1, seq2):
+        if a1 != a2:
+            hdist += 1
+    return hdist
+
+def read_mutation_list(mutation_list):
+    """
+    Args:
+        mutation_list: A control file that operates which amino acid in a position mutates into another. 
+        
+    Return:
+        aa_position (dict):  e.g. {'A':2, 'L':10}
+    """
+    with open(mutation_list, "r") as fin:
+        aa_position = {}
+        for line in fin:
+            aa, position = line.strip().split(":")
+            aa_position[aa] = int(position)
+    return aa_position
+
+def _len_eq_1(char):
+    if len(char) == 1:
+        return char
+    raise argparse.ArgumentTypeError(f"The input value must be a single character: {char}")
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("-i", "--ref", required=True)
+
+    p.add_argument("-m", "--mode", default="single", help="single/multi/deep")
+
+    grp2 = p.add_mutually_exclusive_group()
+    grp2.add_argument("-ia", "--aa", type=_len_eq_1, help="single-letter amino acid")
+    grp2.add_argument("-p", "--position", type=int, help="0-index position in the reference sequence")
+    grp2.add_argument("-ml", "--mlist", help="")
+    
+
+    args = p.parse_args()
+    ref = args.ref
+    mode = args.mode
+    position = args.position
+    aa = args.aa
+    mutation_list = args.mlist
+
+    ref_seq = read_seq(ref)
+    output_position_index(ref_seq, "ref")
+
+    if mode == "single":
+        seq = ref2mut(ref_seq, position, aa)
+        write_seq(seq)
+        output_position_index(seq, mode)
+
+    elif mode == "multi":
+        aa_position = read_mutation_list(mutation_list)
+        seq = multiple_mutation(ref_seq, aa_position)
+        write_seq(seq)
+        output_position_index(seq, mode)
+
+    elif mode == "deep":
+        seq = deep_mutational_scanning(ref_seq, 0, 1)
+        write_seq(seq)
+
+    else:
+        print("Invalid mode was specified")
+
+if __name__ == "__main__":
+    main()
