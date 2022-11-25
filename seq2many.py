@@ -1,4 +1,5 @@
 import argparse
+from argparse import RawTextHelpFormatter
 import sys
 
 def ref2mut(ref_seq, position, aa):
@@ -98,7 +99,7 @@ def _len_eq_1(char):
     raise argparse.ArgumentTypeError(f"The input value must be a single character: {char}")
 
 def main():
-    p = argparse.ArgumentParser()
+    p = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter)
     p.add_argument("-i", "--ref", required=True)
 
     p.add_argument("-m", "--mode", default="single", help="single/multi/deep")
@@ -106,8 +107,7 @@ def main():
     grp2 = p.add_mutually_exclusive_group()
     grp2.add_argument("-ia", "--aa", type=_len_eq_1, help="single-letter amino acid")
     grp2.add_argument("-p", "--position", type=int, help="0-index position in the reference sequence")
-    grp2.add_argument("-ml", "--mlist", help="")
-    
+    grp2.add_argument("-ml", "--mlist", help="Specify a mutation list file: e.g. The file should be formatted like \n A:1\n L:2\n K:5\nThe first line indicates that the first index's amino acid mutates into Alanine, etc")
 
     args = p.parse_args()
     ref = args.ref
