@@ -89,12 +89,19 @@ def multiple_mutation(seq, aa_position):
         multseq = ref2mut(multseq, position, aa)
     return multseq
 
-def deep_mutational_scanning(seq, begin_position, end_position):
+def deep_mutational_scanning(ref_seq, begin_position, end_position):
     AAs = list("G P A V L I M C F Y W H K R Q N E D S T".split())
     dms_seq = []
     icou = 0
+    seq = ref_seq
     for i in range(begin_position, end_position):
         for aa in AAs:
+
+            print(i, ref_seq[i], aa)
+            if ref_seq[i] == aa: 
+                print(f"Identity mutation ({ref_seq[i]} => {aa}) is skipped.")
+                continue 
+
             seq = ref2mut(seq, i, aa)
             output_position_index(seq, f"mutant_{icou}")
             dms_seq.append(seq)
