@@ -11,7 +11,7 @@ Requirements:
 
 
 ## Example
-Suppose the following reference sequence (This file name is `ref.seq`):
+Suppose the following reference sequence (Let this file name be `ref.seq`):
 ```
 >6M17_E
 CPFGEVFNATRFASVYAWNRKRISNCVADYSVLYNSASFSTFKCYGVSPTKLNDLCFTNVYADSFVIRGD
@@ -22,15 +22,14 @@ GSTPCNGVEGFNCYFPLQSYGFQPTNGVGYQPYRVVVLSFELL
 ### Single-point mutation (The amino acid at position 0 mutates into K)
 `python seq2many.py -i ref.seq -m single -p 0 -ia K`
 
-
-### multiple mutation 
+### Multiple mutation 
 `python seq2many.py -i ref.seq -m multi -ml mutlist.inp`
 
 where
 ```mutlist.inp
-A:1
-L:2
-K:5
+A:1   # The amino acid at the position 1 muates into A.
+L:2   # ... at the position 2 mutates into L.
+K:5   # ... at the position 5 mutates into K.
 ```
 
 ### Deep mutational scanning
