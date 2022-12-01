@@ -97,7 +97,7 @@ def deep_mutational_scanning(ref_seq, begin_position, end_position):
     for i in range(begin_position, end_position):
         for aa in AAs:
 
-            print(i, ref_seq[i], aa)
+            #print(i, ref_seq[i], aa)
             if ref_seq[i] == aa: 
                 print(f"Identity mutation ({ref_seq[i]} => {aa}) is skipped.")
                 continue 
@@ -146,7 +146,7 @@ def main():
     grp2 = p.add_mutually_exclusive_group()
     grp2.add_argument("-ia", "--aa", type=_len_eq_1, help="single-letter amino acid")
     grp2.add_argument("-ml", "--mlist", help="Specify a mutation list file: e.g. The file should be formatted like \n A:1\n L:2\n K:5\nThe first line indicates that the first index's amino acid mutates into Alanine, etc")
-    grp2.add_argument("-rg", "--region", type=int, action='append', nargs=2, help="Regions (begin and end of 0-index residue No.)")
+    grp2.add_argument("-r", "--regions", type=int, action='append', nargs=2, help="Regions (begin and end of 0-index residue No.)")
 
     args = p.parse_args()
     ref = args.ref
@@ -154,7 +154,7 @@ def main():
     position = args.position
     aa = args.aa
     mutation_list = args.mlist
-    regions = args.region
+    regions = args.regions
 
     ref_seq = read_seq(ref)
     output_position_index(ref_seq, "ref")
@@ -173,8 +173,8 @@ def main():
     elif mode == "deep":
         for region in regions:
             begin, end = region
-            seq = deep_mutational_scanning(ref_seq, begin, end)
-            write_seq(seq)
+            seqs = deep_mutational_scanning(ref_seq, begin, end)
+            write_seq(seqs)
 
     else:
         print("Invalid mode was specified")
