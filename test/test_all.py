@@ -35,16 +35,15 @@ class TestAll(unittest.TestCase):
         seq = "AAA"
         seqs = deep_mutational_scanning(seq, 0, 3)
         n_seqs = len(seqs)
-        expected = 20*3
+        expected = 19*3
         self.assertEqual(n_seqs, expected)
         print(n_seqs, expected)
 
-    def test_deep_mutational_scanning2(self):
-        seq = "AAA"
-        seqs = deep_mutational_scanning(seq, 0, 5)
-        n_seqs = len(seqs)
-        expected = 20*5
-        self.assertEqual(n_seqs, expected)
-        print(n_seqs, expected)
-
+#    def test_deep_mutational_scanning2(self):
+#        seq = "AAAAA"
+#        seqs = deep_mutational_scanning(seq, 0, 5)
+#        n_seqs = len(seqs)
+#        expected = 19*5
+#        self.assertEqual(n_seqs, expected)
+#        print(n_seqs, expected)
 
