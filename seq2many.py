@@ -92,9 +92,13 @@ def multiple_mutation(seq, aa_position):
 def deep_mutational_scanning(seq, begin_position, end_position):
     AAs = list("G P A V L I M C F Y W H K R Q N E D S T".split())
     dms_seq = []
+    icou = 0
     for i in range(begin_position, end_position):
         for aa in AAs:
-            dms_seq.append(ref2mut(seq, i, aa))
+            seq = ref2mut(seq, i, aa)
+            output_position_index(seq, f"mutant_{icou}")
+            dms_seq.append(seq)
+            icou += 1
     return dms_seq
 
 def hamming_distance(seq1, seq2):
