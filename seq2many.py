@@ -54,19 +54,6 @@ def write_seq(seq, outname):
         fout.write(f"> {outname}\n")
         fout.write(seq)
 
-#    # Single sequence is outputed.
-#    if isinstance(seqs, str):
-#        with open("out.seq", "w") as fout:
-#            fout.write(f"> mutant \n")
-#            fout.write(seqs)
-#
-#    # Many mutant sequences are outputed.
-#    elif isinstance(seqs, list): 
-#        for i, seq in enumerate(seqs):
-#            with open(f"mutant_{i}.seq", "w") as fout:
-#                fout.write(f"> mutant {i}\n")
-#                fout.write(seq+"\n")
-
 def output_position_index(seq, prefix):
     with open(f"index_{prefix}.out", "w") as fout:
         fout.write("#index, aa\n")
