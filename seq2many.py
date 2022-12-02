@@ -97,13 +97,11 @@ def deep_mutational_scanning(ref_seq, begin_position, end_position):
     for i in range(begin_position, end_position):
         for aa in AAs:
 
-            #print(i, ref_seq[i], aa)
             if ref_seq[i] == aa: 
                 print(f"Identity mutation ({ref_seq[i]} => {aa}) is skipped.")
                 continue 
 
             seq = ref2mut(seq, i, aa)
-            output_position_index(seq, f"mutant_{icou}")
             dms_seq.append(seq)
             icou += 1
     return dms_seq
@@ -175,6 +173,8 @@ def main():
             begin, end = region
             seqs = deep_mutational_scanning(ref_seq, begin, end)
             write_seq(seqs)
+            for i, seq in enumerate(seqs):
+                output_position_index(seq, f"mut_{i}")
 
     else:
         print("Invalid mode was specified")
