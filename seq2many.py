@@ -93,7 +93,6 @@ def deep_mutational_scanning(ref_seq, begin_position, end_position):
     AAs = list("G P A V L I M C F Y W H K R Q N E D S T".split())
     dms_seq = []
     icou = 0
-    seq = ref_seq
     for i in range(begin_position, end_position):
         for aa in AAs:
 
@@ -101,7 +100,7 @@ def deep_mutational_scanning(ref_seq, begin_position, end_position):
                 print(f"Identity mutation ({ref_seq[i]} => {aa}) is skipped.")
                 continue 
 
-            seq = ref2mut(seq, i, aa)
+            seq = ref2mut(ref_seq, i, aa)
             dms_seq.append(seq)
             icou += 1
     return dms_seq
@@ -169,6 +168,10 @@ def main():
         output_position_index(seq, mode)
 
     elif mode == "deep":
+        if regions == None: 
+            regions = [[0, len(ref_seq)]]
+        print("   Regions are not specified. Default value was used => ", regions)
+
         for region in regions:
             begin, end = region
             seqs = deep_mutational_scanning(ref_seq, begin, end)
