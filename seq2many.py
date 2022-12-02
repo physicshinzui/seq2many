@@ -49,20 +49,23 @@ def read_seq(input_seq):
             ref_seq = ref_seq + line.strip()
     return ref_seq 
 
-def write_seq(seqs):
+def write_seq(seq, outname):
+    with open(f"{outname}.seq", "w") as fout:
+        fout.write(f"> {outname}\n")
+        fout.write(seq)
 
-    # Single sequence is outputed.
-    if isinstance(seqs, str):
-        with open("out.seq", "w") as fout:
-            fout.write(f"> mutant \n")
-            fout.write(seqs)
-
-    # Many mutant sequences are outputed.
-    elif isinstance(seqs, list): 
-        for i, seq in enumerate(seqs):
-            with open(f"mutant_{i}.seq", "w") as fout:
-                fout.write(f"> mutant {i}\n")
-                fout.write(seq+"\n")
+#    # Single sequence is outputed.
+#    if isinstance(seqs, str):
+#        with open("out.seq", "w") as fout:
+#            fout.write(f"> mutant \n")
+#            fout.write(seqs)
+#
+#    # Many mutant sequences are outputed.
+#    elif isinstance(seqs, list): 
+#        for i, seq in enumerate(seqs):
+#            with open(f"mutant_{i}.seq", "w") as fout:
+#                fout.write(f"> mutant {i}\n")
+#                fout.write(seq+"\n")
 
 def output_position_index(seq, prefix):
     with open(f"index_{prefix}.out", "w") as fout:
@@ -158,13 +161,13 @@ def main():
 
     if mode == "single":
         seq = ref2mut(ref_seq, position, aa)
-        write_seq(seq)
+        write_seq(seq, "out_single")
         output_position_index(seq, mode)
 
     elif mode == "multi":
         aa_position = read_mutation_list(mutation_list)
         seq = multiple_mutation(ref_seq, aa_position)
-        write_seq(seq)
+        write_seq(seq, "out_multi")
         output_position_index(seq, mode)
 
     elif mode == "deep":
@@ -174,9 +177,9 @@ def main():
 
         for region in regions:
             begin, end = region
-            seqs = deep_mutational_scanning(ref_seq, begin, end)
-            write_seq(seqs)
+            seqs = deep_mutational_scanning(ref_seq, begin, end) 
             for i, seq in enumerate(seqs):
+                write_seq(seq, f"mut_{i}")
                 output_position_index(seq, f"mut_{i}")
 
     else:
